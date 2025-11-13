@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Let's Bake Cookies Together!</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Snowfall container -->
+    <div id="snowfall"></div>
+
+    <!-- Welcome Screen -->
+    <div id="welcome-screen" class="screen active">
+        <div class="home-scene">
+            <div class="window">
+                <div class="curtain curtain-left"></div>
+                <div class="curtain curtain-right"></div>
+                <div class="window-pane"></div>
+            </div>
+        </div>
+        <h1 class="welcome-title">Let's bake cookies together!</h1>
+        <p class="welcome-subtitle">Click anywhere to start</p>
+    </div>
+
+    <!-- Main Baking Area -->
+    <div id="baking-area" class="screen">
+        <!-- Kitchen Background -->
+        <div class="kitchen-background">
+            <div class="window-small">
+                <div class="curtain-small curtain-small-left"></div>
+                <div class="curtain-small curtain-small-right"></div>
+            </div>
+        </div>
+
+        <!-- Options Bar (top) -->
+        <div id="options-bar" class="options-bar"></div>
+
+        <!-- Table View -->
+        <div id="table-view" class="table-view">
+            <!-- Step 1: Cookie Cutting -->
+            <div id="step-1" class="step active-step">
+                <div class="dough" id="dough"></div>
+            </div>
+
+            <!-- Step 2: Icing -->
+            <div id="step-2" class="step">
+                <div class="cookie" id="cookie-icing"></div>
+            </div>
+
+            <!-- Step 3: Drawing -->
+            <div id="step-3" class="step">
+                <canvas id="drawing-canvas" width="400" height="400"></canvas>
+                <div class="cookie" id="cookie-drawing"></div>
+            </div>
+
+            <!-- Step 4: Sprinkles -->
+            <div id="step-4" class="step">
+                <canvas id="sprinkles-canvas" width="400" height="400"></canvas>
+                <div class="cookie" id="cookie-sprinkles"></div>
+            </div>
+
+            <!-- Step 5: Finale -->
+            <div id="step-5" class="step">
+                <div class="plate">
+                    <div class="cookie final-cookie" id="cookie-final"></div>
+                </div>
+                <h2 class="enjoy-text">Enjoy!</h2>
+            </div>
+        </div>
+
+        <!-- Navigation Arrows -->
+        <button id="prev-arrow" class="nav-arrow prev-arrow" aria-label="Previous step">
+            <svg width="40" height="40" viewBox="0 0 40 40">
+                <path d="M25 10 L15 20 L25 30" stroke="white" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </button>
+        <button id="next-arrow" class="nav-arrow next-arrow" aria-label="Next step">
+            <svg width="40" height="40" viewBox="0 0 40 40">
+                <path d="M15 10 L25 20 L15 30" stroke="white" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </button>
+
+        <!-- Step Indicator -->
+        <div class="step-indicator">
+            <span class="step-dot" data-step="1"></span>
+            <span class="step-dot" data-step="2"></span>
+            <span class="step-dot" data-step="3"></span>
+            <span class="step-dot" data-step="4"></span>
+            <span class="step-dot" data-step="5"></span>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
