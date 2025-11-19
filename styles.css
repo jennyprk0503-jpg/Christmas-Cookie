@@ -223,26 +223,119 @@ body {
 
 /* Shape Options */
 .shape-option {
-    font-size: 3em;
-    width: 80px;
-    height: 80px;
+    width: 100px;
+    height: 100px;
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
 }
 
-/* Color Options */
-.color-option {
+.shape-preview {
+    width: 70px;
+    height: 70px;
+    background: #F5DEB3;
+    position: relative;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.shape-preview.preview-gingerbread {
+    clip-path: path('M35,5 C30,5 28,9 28,12 L26,20 L20,25 L20,37 L26,45 L27,62 L27,70 L32,70 L32,62 L34,50 L36,50 L38,62 L38,70 L43,70 L43,62 L44,45 L50,37 L50,25 L44,20 L42,12 C42,9 40,5 35,5 Z');
+}
+
+.shape-preview.preview-santa {
+    clip-path: polygon(50% 0%, 80% 20%, 85% 50%, 75% 80%, 50% 100%, 25% 80%, 15% 50%, 20% 20%);
+}
+
+.shape-preview.preview-snowman {
+    width: 60px;
+    height: 80px;
+    background: transparent;
+}
+
+.shape-preview.preview-snowman::before {
+    content: '';
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #F5DEB3;
+    top: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.shape-preview.preview-snowman::after {
+    content: '';
+    position: absolute;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: #F5DEB3;
+    top: 35px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* Icing Color Options */
+.icing-option {
+    width: 100px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.icing-preview {
     width: 60px;
     height: 60px;
-    border-radius: 50%;
-    border: 3px solid white;
+    position: relative;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+    clip-path: circle(45%);
 }
 
-.color-option.red { background: #C41E3A; }
-.color-option.green { background: #2D5016; }
-.color-option.white { background: #FFFAF0; }
-.color-option.black { background: #2C1810; }
+.icing-preview.red { background: #C41E3A; }
+.icing-preview.green { background: #2D5016; }
+.icing-preview.white { background: #FFFAF0; }
+
+/* Drawing Pen Options */
+.pen-option {
+    width: 80px;
+    height: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.pen-preview {
+    width: 40px;
+    height: 50px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.pen-tip {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-bottom: 3px;
+}
+
+.pen-body {
+    width: 12px;
+    height: 35px;
+    background: linear-gradient(to bottom, #ccc, #999);
+    border-radius: 2px;
+}
+
+.pen-tip.black { background: #2C1810; }
+.pen-tip.white { background: #FFFAF0; border: 1px solid #ccc; }
+.pen-tip.red { background: #C41E3A; }
 
 /* Sprinkle Options */
 .sprinkle-option {

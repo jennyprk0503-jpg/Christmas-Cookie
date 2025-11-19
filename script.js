@@ -159,16 +159,21 @@ function showStepContent(step) {
 function showShapeOptions() {
     const optionsBar = document.getElementById('options-bar');
     const shapes = [
-        { name: 'gingerbread', icon: '🍪', label: 'Gingerbread Man' },
-        { name: 'santa', icon: '🎅', label: 'Santa Hat' },
-        { name: 'snowman', icon: '⛄', label: 'Snowman' }
+        { name: 'gingerbread', label: 'Gingerbread Man' },
+        { name: 'santa', label: 'Santa Hat' },
+        { name: 'snowman', label: 'Snowman' }
     ];
 
     shapes.forEach(shape => {
         const option = document.createElement('div');
         option.className = 'option shape-option';
-        option.innerHTML = shape.icon;
         option.title = shape.label;
+
+        // Create visual preview of the cookie shape
+        const preview = document.createElement('div');
+        preview.className = `shape-preview preview-${shape.name}`;
+        option.appendChild(preview);
+
         option.addEventListener('click', () => selectShape(shape.name, option));
         optionsBar.appendChild(option);
     });
@@ -208,8 +213,14 @@ function showIcingOptions() {
 
     colors.forEach(color => {
         const option = document.createElement('div');
-        option.className = `option color-option ${color}`;
+        option.className = 'option icing-option';
         option.title = color.charAt(0).toUpperCase() + color.slice(1) + ' Icing';
+
+        // Create visual preview of icing color
+        const preview = document.createElement('div');
+        preview.className = `icing-preview ${color}`;
+        option.appendChild(preview);
+
         option.addEventListener('click', () => selectIcingColor(color, option));
         optionsBar.appendChild(option);
     });
@@ -219,7 +230,7 @@ function selectIcingColor(color, optionElement) {
     selectedIcingColor = color;
 
     // Update selection UI
-    document.querySelectorAll('.color-option').forEach(el => el.classList.remove('selected'));
+    document.querySelectorAll('.icing-option').forEach(el => el.classList.remove('selected'));
     optionElement.classList.add('selected');
 
     // Apply icing color
@@ -248,14 +259,29 @@ function showDrawingOptions() {
 
     colors.forEach(color => {
         const option = document.createElement('div');
-        option.className = `option color-option ${color}`;
+        option.className = 'option pen-option';
         option.title = color.charAt(0).toUpperCase() + color.slice(1) + ' Icing Pen';
+
+        // Create visual preview of icing pen
+        const preview = document.createElement('div');
+        preview.className = 'pen-preview';
+
+        const tip = document.createElement('div');
+        tip.className = `pen-tip ${color}`;
+
+        const body = document.createElement('div');
+        body.className = 'pen-body';
+
+        preview.appendChild(tip);
+        preview.appendChild(body);
+        option.appendChild(preview);
+
         option.addEventListener('click', () => selectDrawingColor(color, option));
         optionsBar.appendChild(option);
     });
 
     // Select black by default
-    const firstOption = optionsBar.querySelector('.color-option');
+    const firstOption = optionsBar.querySelector('.pen-option');
     if (firstOption && !selectedDrawingColor) {
         selectDrawingColor('black', firstOption);
     }
@@ -265,7 +291,7 @@ function selectDrawingColor(color, optionElement) {
     selectedDrawingColor = color;
 
     // Update selection UI
-    document.querySelectorAll('.color-option').forEach(el => el.classList.remove('selected'));
+    document.querySelectorAll('.pen-option').forEach(el => el.classList.remove('selected'));
     optionElement.classList.add('selected');
 
     playChime();
