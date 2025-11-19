@@ -363,6 +363,34 @@ body {
     transform: scale(0.3);
 }
 
+/* Ornament Instruction Text */
+.ornament-instruction {
+    position: absolute;
+    top: 150px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1.1em;
+    color: white;
+    background: rgba(196, 30, 58, 0.85);
+    padding: 12px 24px;
+    border-radius: 25px;
+    z-index: 150;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    animation: pulseInstruction 2s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes pulseInstruction {
+    0%, 100% { opacity: 0.9; transform: translateX(-50%) scale(1); }
+    50% { opacity: 1; transform: translateX(-50%) scale(1.02); }
+}
+
+/* Ghost Ornament Canvas */
+#ghost-ornament {
+    pointer-events: none;
+}
+
 /* Table View */
 .table-view {
     position: absolute;

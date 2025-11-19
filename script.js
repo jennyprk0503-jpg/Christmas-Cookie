@@ -134,6 +134,19 @@ function showStepContent(step) {
     const optionsBar = document.getElementById('options-bar');
     optionsBar.innerHTML = '';
 
+    // Clean up instruction text from previous steps
+    const existingInstruction = document.querySelector('.ornament-instruction');
+    if (existingInstruction) {
+        existingInstruction.remove();
+    }
+
+    // Clean up ghost ornament canvas from previous step
+    if (ghostCanvas) {
+        ghostCanvas.remove();
+        ghostCanvas = null;
+        ghostCtx = null;
+    }
+
     switch(step) {
         case 1:
             showShapeOptions();
@@ -355,15 +368,21 @@ function copyCanvasToNextSteps() {
     // This will be handled by copying the canvas image data in the finale
 }
 
-// Step 4: Sprinkles
+// Step 4: Sprinkles (Ornaments)
 function showSprinkleOptions() {
     const optionsBar = document.getElementById('options-bar');
     const sprinkleTypes = ['round', 'star', 'heart'];
 
+    // Add instruction text
+    const instructionText = document.createElement('div');
+    instructionText.className = 'ornament-instruction';
+    instructionText.textContent = 'Click to select, then click or drag to place ornaments';
+    optionsBar.parentElement.insertBefore(instructionText, optionsBar);
+
     sprinkleTypes.forEach(type => {
         const option = document.createElement('div');
         option.className = 'option sprinkle-option';
-        option.title = type.charAt(0).toUpperCase() + type.slice(1) + ' Sprinkles';
+        option.title = type.charAt(0).toUpperCase() + type.slice(1) + ' Ornaments';
         option.draggable = true;
 
         // Create preview sprinkles
@@ -378,6 +397,11 @@ function showSprinkleOptions() {
         option.addEventListener('dragstart', (e) => {
             selectedSprinkleType = type;
             e.dataTransfer.effectAllowed = 'copy';
+            option.classList.add('dragging');
+        });
+
+        option.addEventListener('dragend', (e) => {
+            option.classList.remove('dragging');
         });
 
         option.addEventListener('click', () => {
@@ -393,19 +417,101 @@ function showSprinkleOptions() {
 
 function setupSprinkles() {
     const canvas = sprinklesCanvas;
+    let ghostOrnament = null;
+
+    // Update cursor style
+    canvas.style.cursor = 'crosshair';
+
+    // Mouse move to show preview
+    canvas.addEventListener('mousemove', (e) => {
+        if (!selectedSprinkleType) return;
+
+        const rect = canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        // Show ghost preview
+        showGhostOrnament(x, y);
+    });
+
+    canvas.addEventListener('mouseleave', () => {
+        hideGhostOrnament();
+    });
 
     canvas.addEventListener('click', addSprinkle);
+
     canvas.addEventListener('dragover', (e) => {
         e.preventDefault();
+        e.dataTransfer.dropEffect = 'copy';
     });
+
     canvas.addEventListener('drop', (e) => {
         e.preventDefault();
         addSprinkle(e);
     });
 }
 
-function addSprinkle(e) {
+let ghostCanvas = null;
+let ghostCtx = null;
+
+function showGhostOrnament(x, y) {
     if (!selectedSprinkleType) return;
+
+    // Create ghost canvas if it doesn't exist
+    if (!ghostCanvas) {
+        ghostCanvas = document.createElement('canvas');
+        ghostCanvas.id = 'ghost-ornament';
+        ghostCanvas.width = 400;
+        ghostCanvas.height = 400;
+        ghostCanvas.style.position = 'absolute';
+        ghostCanvas.style.top = '50%';
+        ghostCanvas.style.left = '50%';
+        ghostCanvas.style.transform = 'translate(-50%, -50%)';
+        ghostCanvas.style.pointerEvents = 'none';
+        ghostCanvas.style.zIndex = '25';
+        ghostCanvas.style.opacity = '0.5';
+        document.getElementById('step-4').appendChild(ghostCanvas);
+        ghostCtx = ghostCanvas.getContext('2d');
+    }
+
+    // Clear previous ghost
+    ghostCtx.clearRect(0, 0, ghostCanvas.width, ghostCanvas.height);
+
+    // Draw ghost ornament
+    const colors = ['#C41E3A', '#2D5016', '#FFFAF0'];
+    const color = colors[0]; // Use red for preview
+    ghostCtx.fillStyle = color;
+    ghostCtx.globalAlpha = 0.6;
+
+    switch(selectedSprinkleType) {
+        case 'round':
+            ghostCtx.beginPath();
+            ghostCtx.arc(x, y, 6, 0, Math.PI * 2);
+            ghostCtx.fill();
+            break;
+        case 'star':
+            drawStar(ghostCtx, x, y, 5, 10, 5);
+            break;
+        case 'heart':
+            drawHeart(ghostCtx, x, y, 10);
+            break;
+    }
+
+    ghostCtx.globalAlpha = 1;
+}
+
+function hideGhostOrnament() {
+    if (ghostCtx) {
+        ghostCtx.clearRect(0, 0, ghostCanvas.width, ghostCanvas.height);
+    }
+}
+
+function addSprinkle(e) {
+    if (!selectedSprinkleType) {
+        // Show hint if no ornament selected
+        alert('Please select an ornament type first!');
+        return;
+    }
 
     const rect = sprinklesCanvas.getBoundingClientRect();
     const x = e.clientX - rect.left;
@@ -416,17 +522,29 @@ function addSprinkle(e) {
 
     sprinklesCtx.fillStyle = color;
 
+    // Make ornaments larger and more visible
     switch(selectedSprinkleType) {
         case 'round':
             sprinklesCtx.beginPath();
-            sprinklesCtx.arc(x, y, 4, 0, Math.PI * 2);
+            sprinklesCtx.arc(x, y, 6, 0, Math.PI * 2);
+            sprinklesCtx.fill();
+            // Add shine effect
+            sprinklesCtx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+            sprinklesCtx.beginPath();
+            sprinklesCtx.arc(x - 2, y - 2, 2, 0, Math.PI * 2);
             sprinklesCtx.fill();
             break;
         case 'star':
+            drawStar(sprinklesCtx, x, y, 5, 10, 5);
+            // Add shine effect
+            sprinklesCtx.fillStyle = 'rgba(255, 255, 255, 0.3)';
             drawStar(sprinklesCtx, x, y, 5, 6, 3);
             break;
         case 'heart':
-            drawHeart(sprinklesCtx, x, y, 6);
+            drawHeart(sprinklesCtx, x, y, 10);
+            // Add shine effect
+            sprinklesCtx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+            drawHeart(sprinklesCtx, x - 2, y - 2, 6);
             break;
     }
 
